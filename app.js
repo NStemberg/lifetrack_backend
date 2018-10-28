@@ -25,8 +25,26 @@ app.use(function(req, res, next) {
 
 // -----------------------------------------------------------------------------------------------------
 
-app.get('', function(req, res) {
-    res.json({ text: 'Hello World!'});
+app.get('/posts', function(req, res) {
+    models.Post.find((err, posts) => {
+        res.json(posts);
+    })
+});
+
+app.post('/posts', function(req, res) {
+    models.Post.create(req.body.post,() => {
+        models.Post.find((err, posts) => {
+            res.json(posts);
+        })
+    })
+});
+
+app.post('/posts/:postId', function(req, res) {
+    models.Post.updateOne({ _id: req.params.postId }, req.body.post,() => {
+        models.Post.find((err, posts) => {
+            res.json(posts);
+        })
+    })
 });
 
 
